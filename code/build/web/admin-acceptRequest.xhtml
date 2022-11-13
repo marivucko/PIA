@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:botDetect="https://captcha.com/java/jsf">
+    
+
+    
+
+    <h:head>
+        <title>Accept request for registration</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body>
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Home" action="#{IndexController.home()}"/>
+                <p:menuitem value="Logout" action="#{IndexController.logout()}"/>
+                <p:menuitem value="Back" action="#{AdminControllerAcceptRequest.back()}"/>
+            </p:menubar> 
+        </h:form>
+        
+        <h:form>      
+            <br/>
+            <h:panelGrid styleClass="panelStyle" cellpadding="5" style="width: 300px; height: 250px">
+                <p:inputText type="text" placeholder="Username" id="username" value="#{AdminControllerAcceptRequest.username}"
+                             required="true" requiredMessage="Please enter username." style="margin-left: 12%">
+                    <f:validator validatorId="usernameNotExistsValidator"/>
+                    <p:message for="username"></p:message>  
+                </p:inputText>
+                
+                <p:commandButton value="Accept request for registration" action="#{AdminControllerAcceptRequest.accept()}" ajax="false" styleClass="buttonStyle" style="margin-left: 3%"/>         
+            </h:panelGrid>
+        </h:form>
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+    </h:body>
+</html>

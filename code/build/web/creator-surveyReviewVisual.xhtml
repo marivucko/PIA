@@ -1,0 +1,310 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Visual review of the survey</title>
+         <script src="https://d3js.org/d3.v4.js"></script>
+         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+         <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body>
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}" ajax="false"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}" ajax="false"/>
+                <p:menuitem value="Back" action="#{CreatorReviewController.backFromVisualReview()}" ajax="false"/>
+            </p:menubar>                
+        </h:form>
+        
+        <h:form>
+                   <script>
+                function f(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, b, gg, noa) {
+                // set the dimensions and margins of the graph
+                if (b) {
+                        var width = 450;
+                            height = 450;
+                            margin = 40;
+
+                        // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+                        var radius = Math.min(width, height) / 2 - margin;
+
+                        // append the svg object to the div called 'my_dataviz'
+                        var svg = d3.select("#my_dataviz")
+                          .append("svg")
+                            .attr("width", width)
+                            .attr("height", height)
+                          .append("g")
+                            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+                        // Create dummy data
+                         var data = {  a1: n1, 
+                            a2: n2, 
+                            a3: n3, 
+                            a4: n4, 
+                            a5: n5,
+                            a6: n6, 
+                            a7: n7, 
+                            a8: n8, 
+                            a9: n9,
+                            a10: n10,
+                            noAnswer: noa
+                         };
+
+                        // set the color scale
+                        var color = d3.scaleOrdinal()
+                          .domain(data)
+                          .range(d3.schemeSet2);
+
+                        // Compute the position of each group on the pie:
+                        var pie = d3.pie()
+                          .value(function(d) {return d.value; });
+                        var data_ready = pie(d3.entries(data));
+                        // Now I know that group A goes from 0 degrees to x degrees and so on.
+
+                        // shape helper to build arcs:
+                        var arcGenerator = d3.arc()
+                          .innerRadius(0)
+                          .outerRadius(radius);
+
+                        // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+                        svg
+                          .selectAll('mySlices')
+                          .data(data_ready)
+                          .enter()
+                          .append('path')
+                            .attr('d', arcGenerator)
+                            .attr('fill', function(d){ return(color(d.data.key)) })
+                            .attr("stroke", "black")
+                            .style("stroke-width", "2px")
+                            .style("opacity", 0.7);
+
+                        // Now add the annotation. Use the centroid method to get the best coordinates
+                        svg
+                          .selectAll('mySlices')
+                          .data(data_ready)
+                          .enter()
+                          .append('text')
+                          .text(function(d){ return (d.data.value === 0 ? '' : gg+". "+d.data.key) })
+                          .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+                          .style("text-anchor", "middle")
+                          .style("font-size", 17);
+                }
+                
+    }
+</script> 
+            
+            
+            <p:dataList value="#{CreatorReviewController.visualQuestionsE}" var="q" rendered="#{not empty CreatorReviewController.visualQuestionsE}" type="definition">
+             
+                
+                <p:panelGrid rendered="#{(q.question.type eq 2 and q.question.numOfSubquestions gt 0) or (q.question.type eq 1 and q.question.numOfSubquestions gt 0)}">
+                    <p:outputLabel value="#{q.questionNoToShow+1}. #{q.question.questionText}"/>
+                    <p:dataList value="#{q.answersE}" var="a" rendered="#{not empty q.answersE}" type="definition">
+                            <p:outputLabel value="#{a.possibleAnswer.subQuestionText}" rendered="#{a.possibleAnswer ne null}"/>
+                            <p:outputLabel value="#{a.userAnswer}" rendered="#{(a.qType eq 1 or a.qType eq 2) and a.userAnswer ne null}"/>
+                                <p:dataList value="#{a.userAnswers}" var="ua" rendered="#{a.qType eq 12 and not empty a.userAnswers and a.realSubQNo gt 1}" type="definition">
+                                    <p:outputLabel value="#{ua.subAnswer}   "/><p:outputLabel value="   -   #{ua.num}          #{ua.num / CreatorReviewController.completedts.size() * 100}%" rendered="#{ua ne null and ua.num gt 0}"/>
+                                </p:dataList>
+                            <p:outputLabel value="   ---   Nobody has answered this subquestion yet." rendered="#{a.qType eq 12 and a.realSubQNo eq 1}"/>
+                            <p:outputLabel value="#{a.userAnswer}   -   #{a.num}          #{a.num / CreatorReviewController.completedts.size() * 100}%" rendered="#{a.qType ne 12 and a.num gt 0}"/>
+                            
+<!--                            ***#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(0).num}**
+                            ***#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(1).num}**
+                            ***#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(2).num}**-->
+                                                 
+                            <p:panelGrid rendered="#{a.subQNo le a.realSubQNo+1}"> 
+                                                                                                            
+                                <div id="my_dataviz"><script>f(#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(0).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(1).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(2).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(3).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(4).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(5).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(6).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(7).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(8).num},
+                                                            #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(9).num},
+                                                                        true,#{q.questionNoToShow+1}+". "+"subQ"+#{a.subQNo+1}, 
+                                                             #{CreatorReviewController.completedts.size()}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(0).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(1).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(2).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(3).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(4).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(5).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(6).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(7).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(8).num}
+                                                            -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).userAnswers.get(9).num})
+                                                                
+                                                                
+                                                    </script>
+                                </div>
+                            
+                            </p:panelGrid>    
+
+
+                    </p:dataList>
+                    <p:outputLabel value="   ---   Nobody has answered this question yet." rendered="#{empty q.answersE}"/>
+                  
+                </p:panelGrid>
+                
+                
+                <p:panelGrid rendered="#{(q.question.type eq 2 and q.question.numOfSubquestions eq 0) or (q.question.type eq 1 and q.question.numOfSubquestions eq 0)}">
+                    <p:outputLabel value="#{q.questionNoToShow+1}. #{q.question.questionText}"/>
+                    <p:dataList value="#{q.answersE}" var="a" rendered="#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).userAnswer ne ''}" type="definition">
+                        <p:outputLabel value="#{a.possibleAnswer.subQuestionText}" rendered="#{a.possibleAnswer ne null}"/>
+                        <p:outputLabel value="#{a.userAnswer}"/>
+                        <p:outputLabel value="   -   #{a.num}          #{a.num / CreatorReviewController.completedts.size() * 100}%" rendered="#{a.userAnswer ne '' and a.qType ne 12}"/>
+                    </p:dataList>
+                    <p:outputLabel value="   ---   Nobody has answered this question yet." rendered="#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).userAnswer eq ''}"/>
+                     <p:panelGrid  rendered="#{a.subQNo le a.realSubQNo}">
+                        
+                            <div id="my_dataviz">
+                                <script>f(#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(1).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(2).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(3).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(4).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(5).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(6).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(7).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(8).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(9).num},
+                                                      true,#{q.questionNoToShow}+1, 
+                                 #{CreatorReviewController.completedts.size()}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(1).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(2).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(3).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(4).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(5).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(6).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(7).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(8).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(9).num})
+                        </script></div>
+                    </p:panelGrid>
+
+                </p:panelGrid>
+                
+                
+                <p:panelGrid rendered="#{q.question.type eq 3}">
+                    <p:outputLabel value="#{q.questionNoToShow+1}. #{q.question.questionText}"/>
+                    <p:dataList value="#{q.answersE}" var="a" rendered="#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).userAnswer ne ''}" type="definition">
+                        <p:outputLabel value="#{q.questionNoToShow+1}.#{a.subQNo+1}. #{a.possibleAnswer.subQuestionText}" rendered="#{a.possibleAnswer ne null}"/>
+                        <p:outputLabel value="#{a.userAnswer}" rendered="#{a.qType eq 3}"/>
+                        <p:outputLabel value="   -   #{a.num}          #{a.num / CreatorReviewController.completedts.size() * 100}%" rendered="#{a.userAnswer ne '' and a.qType ne 12}"/>
+                    </p:dataList>
+                    <p:outputLabel value="   ---   Nobody has answered this question yet." rendered="#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).userAnswer eq ''}"/>
+                    <p:panelGrid  rendered="#{a.subQNo le a.realSubQNo}">
+                        
+                            <div id="my_dataviz">
+                                <script>f(#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(1).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(2).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(3).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(4).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(5).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(6).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(7).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(8).num},
+                                          #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(9).num},
+                                                      true,#{q.questionNoToShow}+1, 
+                                 #{CreatorReviewController.completedts.size()}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(1).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(2).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(3).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(4).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(5).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(6).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(7).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(8).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(9).num})
+                        </script></div>
+                    </p:panelGrid>
+
+                </p:panelGrid>
+                
+                <p:panelGrid rendered="#{q.question.type eq 4}">
+                    <p:outputLabel value="#{q.questionNoToShow+1}. #{q.question.questionText}"/>
+                    <p:dataList value="#{q.answersE}" var="a" type="definition">
+                    <p:outputLabel value="#{a.possibleAnswer.subQuestionText}" rendered="#{a.possibleAnswer ne null}"/>
+                    <p:outputLabel value="   -   #{a.num}          #{a.num / CreatorReviewController.completedts.size() * 100}%" rendered="#{a.qType ne 12 and a.possibleAnswer ne null}"/>
+                    </p:dataList>
+                    <p:panelGrid  >
+                        
+                        <div id="my_dataviz">
+                            <script>
+                                f(#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(1).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(2).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(3).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(4).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(5).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(6).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(7).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(8).num},
+                                  #{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(9).num},
+                                              true,#{q.questionNoToShow}+1, 
+                                #{CreatorReviewController.completedts.size()}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(0).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(1).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(2).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(3).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(4).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(5).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(6).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(7).num}
+                                 -#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(8).num}-#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(9).num})</script></div></p:panelGrid>
+
+
+                </p:panelGrid>
+                
+                <p:panelGrid rendered="#{q.question.type eq 5}" style=" border-style: ridge;">
+                    <p:outputLabel value="#{q.questionNoToShow+1}. #{q.question.questionText}"/>
+<!--                    <div class="datalist-noborder">-->
+                    <p:dataList value="#{q.answersE}" var="a" type="definition">
+                    <p:outputLabel value="#{q.questionNoToShow+1}.#{a.subQNo+1}. #{a.possibleAnswer.subQuestionText}" rendered="#{a.possibleAnswer ne null}"/>
+                    <p:outputLabel value="   -   #{a.num}          #{a.num / CreatorReviewController.completedts.size() * 100}%" rendered="#{a.qType ne 12 and a.possibleAnswer ne null}"/>
+                    </p:dataList> 
+                    <!--</div>-->
+                    
+                    <div class="datalist-noborder">
+                    <p:dataList value="#{q.answersE}" var="a" type="definition">
+                     <p:panelGrid  rendered="#{a.subQNo lt a.realSubQNo}">
+                        <div id="my_dataviz">
+                            <script>
+                                f(#{CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).num},
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  0,
+                                  true,
+                                  #{q.questionNoToShow+1}+". "+"subQ"+#{a.subQNo+1},                               
+                                  #{CreatorReviewController.completedts.size() - CreatorReviewController.visualQuestionsE.get(q.questionNoToShow).answersE.get(a.subQNo).num})
+                            </script></div>
+                    </p:panelGrid>
+                    </p:dataList>
+                    </div>        
+                    
+                </p:panelGrid>
+                
+      
+        
+        
+
+                
+            </p:dataList>
+            
+        </h:form>
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+
+    </h:body>
+</html>
+
+

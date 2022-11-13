@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Finished test</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body>
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}" ajax="false"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}" ajax="false"/>
+
+            </p:menubar>                
+        </h:form>
+        
+        <p:dataList value="#{ExamineeControllerStartTest.questionsE}" var="q" rendered="#{not empty ExamineeControllerStartTest.currentQuestions}" type="ordered">
+        
+            <p:outputLabel value="#{q.question.questionText}"/><br/>
+            
+            <p:outputLabel value="Correct answer: #{q.question.correctAnswer}" rendered="#{q.question.type ne 5}"/>
+            <p:outputLabel value="Correct answers: " rendered="#{q.question.type eq 5}"/>
+            <div class="datalist-noborder">
+            <p:dataList value="#{q.answersE}" var="aa" rendered="#{q.question.type eq 5}" type="definition">
+                <p:outputLabel value="#{aa.possibleAnswer.subQuestionText}" rendered="#{aa.possibleAnswer.correctAnswer eq true}"/>
+            </p:dataList>
+            </div>
+            
+            <p:outputLabel value="Your answer: #{q.userAnswer}" rendered="#{q.question.type ne 5}"/>
+            <p:outputLabel value="Your answers: #{q.userAnswer}" rendered="#{q.question.type eq 5}"/>
+            <div class="datalist-noborder">
+            <p:dataList value="#{q.answersE}" var="aa" rendered="#{q.question.type eq 5}" type="definition">
+                <p:outputLabel value="#{aa.possibleAnswer.subQuestionText}" rendered="#{aa.userAnswer eq true}"/>
+            </p:dataList>
+            </div>
+            
+            <p:outputLabel value="Points: #{q.userPoints} / #{q.question.points}" /><br/>
+            
+            
+            <br/>
+        
+        
+        </p:dataList>
+        
+        <p:outputLabel value="Points: #{ExamineeControllerStartTest.totalPoints}/#{ExamineeControllerStartTest.maxPoints}"/>
+
+<br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert  name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div>         
+    </h:body>
+</html>
+

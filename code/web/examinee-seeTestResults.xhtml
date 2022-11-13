@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Results</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+
+    </h:head>
+    <h:body>
+        <script type="text/javascript" src="js/pie.js"></script>
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}" ajax="false"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}" ajax="false"/>
+                <p:menuitem value="Back" action="#{ExamineeController.backFromExamineeSeeResults()}" ajax="false"/>
+            </p:menubar>                
+        </h:form>
+        
+        <br/>
+      
+            <h:form>
+                <br/>
+                <h:panelGrid styleClass="panelStyle" style="width: 500px; height: 400px;" columns="2" cellpadding="5"> 
+                    <p:outputLabel value="Name: " style="margin-left: 10%"/><p:outputLabel value="#{ExamineeController.user.name}" style="width: 10px"/>
+                    <p:outputLabel value="Surname: " style="margin-left: 10%"/><p:outputLabel value="#{ExamineeController.user.surname}"/>
+                    <p:outputLabel value="Your points: " style="margin-left: 10%"/><p:outputLabel value="#{ExamineeController.completedts.userPoints}"/>
+                    <p:outputLabel value="Max points " style="margin-left: 10%"/><p:outputLabel value="#{ExamineeController.completedts.maxPoints}"/>
+                    <p:outputLabel value="#{ExamineeController.perCent}%" style="margin-left: 10%"/>
+                </h:panelGrid>
+            </h:form>  
+      
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+    </h:body>
+</html>
+

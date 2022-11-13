@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 2, 2020 6:12:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pojo.Ts" table="ts" catalog="pia_projekat" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="100" not-null="true" />
+        </property>
+        <property name="basicInfo" type="string">
+            <column name="basicInfo" length="200" not-null="true" />
+        </property>
+        <property name="testSurvey" type="boolean">
+            <column name="test_survey" not-null="true">
+                <comment>1-test 0-survey</comment>
+            </column>
+        </property>
+        <property name="isPersonalised" type="boolean">
+            <column name="isPersonalised" not-null="true" />
+        </property>
+        <property name="dateTimeStart" type="timestamp">
+            <column name="dateTimeStart" length="19" not-null="true" />
+        </property>
+        <property name="dateTimeEnd" type="timestamp">
+            <column name="dateTimeEnd" length="19" not-null="true" />
+        </property>
+        <property name="durationPagesNo" type="int">
+            <column name="duration_pagesNo" not-null="true" />
+        </property>
+        <property name="creatorUsername" type="string">
+            <column name="creatorUsername" length="30" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

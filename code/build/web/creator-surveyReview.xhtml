@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Tests and polls</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body>
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}" ajax="false"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}" ajax="false"/>
+                <p:menuitem value="Back" action="#{CreatorReviewController.returnFromCreatorSruveyReview()}" ajax="false"/>
+                <p:menuitem value="VisualReview" action="#{CreatorReviewController.visualSurveyReview()}" ajax="false"/>
+            </p:menubar>                
+        </h:form>
+        
+        <p:outputLabel value="Nobody has completed the survey yet." rendered="#{empty CreatorReviewController.tse}" style="margin-left: 20%;"/>
+        
+        <div class="datalist-noborder">
+        <p:dataList value="#{CreatorReviewController.tse}" var="tse" rendered="#{not empty CreatorReviewController.tse}" type="definition">
+            
+                <div class="datalist-noborder">
+                <p:dataList value="#{tse.questionsE}" var="q" rendered="#{not empty tse}" type="definition">
+                   
+                    <p:panelGrid rendered="#{q.questionNoToShow eq 1}"><p:separator/></p:panelGrid><br/>
+                    
+                    <p:panelGrid rendered="#{q.questionNoToShow eq 1 and tse.isPersonalised}" columns="2" style="margin-left: 5%; border-style: ridge;">
+                        <p:outputLabel value="Name "/><p:outputLabel value="#{tse.user.name}"/>
+                        <p:outputLabel value="Surname "/><p:outputLabel value="#{tse.user.surname}"/>
+                        <p:outputLabel value="Birthday "/><p:outputLabel value="#{tse.user.birthday}"/>
+                    </p:panelGrid>
+                    <p:panelGrid rendered="#{q.questionNoToShow eq 1}"><br/><br/></p:panelGrid>
+                    
+                    <p:outputLabel value="#{q.questionNoToShow}. #{q.question.questionText}"/><br/>
+  
+                    <p:outputLabel rendered="#{q.question.type eq 1 and q.question.numOfSubquestions eq 0}" value="#{q.userAnswer}"/>
+                    <div class="datalist-noborder">
+                     <p:dataList rendered="#{q.question.type eq 1 and q.question.numOfSubquestions gt 0}" value="#{q.answersE}" var="a"  type="definition">
+                        <p:outputLabel value="#{a.possibleAnswer.subQuestionText}"/><p:outputLabel value="#{a.userAnswer}" style="margin-left: 1%"/><br/>
+                    </p:dataList>
+                    </div>
+                    
+                    <p:outputLabel rendered="#{q.question.type eq 2 and q.question.numOfSubquestions eq 0}" value="#{q.userAnswer}"/>
+                    <div class="datalist-noborder">
+                     <p:dataList rendered="#{q.question.type eq 2 and q.question.numOfSubquestions gt 0}" value="#{q.answersE}" var="a"  type="definition">
+                         <p:outputLabel value="#{a.possibleAnswer.subQuestionText}"/><p:outputLabel value="#{a.userAnswer}" style="margin-left: 1%"/><br/>
+                    </p:dataList>
+                    </div>
+                    
+                    <p:outputLabel rendered="#{q.question.type eq 3}" value="#{q.userAnswer}"/>
+                        
+
+                        <div class="datalist-noborder">
+                        <p:dataList value="#{q.answersE}" var="aa" rendered="#{q.question.type eq 5}" type="definition">
+                            <p:selectBooleanCheckbox value="#{aa.userAnswer}" disabled="true"/>
+                            <p:outputLabel value="#{aa.possibleAnswer.subQuestionText}"/> 
+                        </p:dataList>
+                        </div>
+                    
+                    
+                       <h:panelGrid rendered="#{q.question.type eq 4}">
+                        
+                         <p:selectOneRadio rendered="#{q.answersE.size() == 2}"  value="#{q.userAnswer}" disabled="true">
+                            <f:selectItem itemValue="#{q.answersE.get(0).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(0).possibleAnswer.subQuestionText}" />   
+                            <f:selectItem itemValue="#{q.answersE.get(1).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(1).possibleAnswer.subQuestionText}"/> 
+                        </p:selectOneRadio> 
+                        
+                           <p:selectOneRadio rendered="#{q.answersE.size() == 3}" value="#{q.userAnswer}" disabled="true">
+                            <f:selectItem itemValue="#{q.answersE.get(0).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(0).possibleAnswer.subQuestionText}"/>   
+                            <f:selectItem itemValue="#{q.answersE.get(1).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(1).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(2).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(2).possibleAnswer.subQuestionText}"/> 
+                        </p:selectOneRadio> 
+                        
+                        <p:selectOneRadio rendered="#{q.answersE.size() == 4}"  value="#{q.userAnswer}">
+                            <f:selectItem itemValue="#{q.answersE.get(0).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(0).possibleAnswer.subQuestionText}"/>   
+                            <f:selectItem itemValue="#{q.answersE.get(1).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(1).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(2).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(2).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(3).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(3).possibleAnswer.subQuestionText}"/> 
+                        </p:selectOneRadio>  
+                        
+                
+                           <p:selectOneRadio rendered="#{q.answersE.size() == 5}" value="#{q.userAnswer}" disabled="true">
+                            <f:selectItem itemValue="#{q.answersE.get(0).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(0).possibleAnswer.subQuestionText}"/>   
+                            <f:selectItem itemValue="#{q.answersE.get(1).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(1).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(2).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(2).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(3).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(3).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(4).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(4).possibleAnswer.subQuestionText}"/> 
+                        </p:selectOneRadio> 
+                        
+                        <p:selectOneRadio rendered="#{q.answersE.size() == 6}"  value="#{q.userAnswer}" disabled="true">
+                            <f:selectItem itemValue="#{q.answersE.get(0).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(0).possibleAnswer.subQuestionText}"/>   
+                            <f:selectItem itemValue="#{q.answersE.get(1).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(1).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(2).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(2).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(3).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(3).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(4).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(4).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(5).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(5).possibleAnswer.subQuestionText}"/> 
+                        </p:selectOneRadio>  
+                            <p:selectOneRadio rendered="#{q.answersE.size() == 7}"  value="#{q.userAnswer}" disabled="true">
+                            <f:selectItem itemValue="#{q.answersE.get(0).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(0).possibleAnswer.subQuestionText}"/>   
+                            <f:selectItem itemValue="#{q.answersE.get(1).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(1).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(2).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(2).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(3).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(3).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(4).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(4).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(5).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(5).possibleAnswer.subQuestionText}"/>
+                            <f:selectItem itemValue="#{q.answersE.get(6).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(5).possibleAnswer.subQuestionText}"/>
+                        </p:selectOneRadio>                            
+                        <p:selectOneRadio rendered="#{q.answersE.size() == 8}"  value="#{q.userAnswer}" disabled="true" >
+                            <f:selectItem itemValue="#{q.answersE.get(0).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(0).possibleAnswer.subQuestionText}"/>   
+                            <f:selectItem itemValue="#{q.answersE.get(1).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(1).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(2).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(2).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(3).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(3).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(4).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(4).possibleAnswer.subQuestionText}"/> 
+                            <f:selectItem itemValue="#{q.answersE.get(5).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(5).possibleAnswer.subQuestionText}"/>
+                            <f:selectItem itemValue="#{q.answersE.get(6).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(5).possibleAnswer.subQuestionText}"/>
+                            <f:selectItem itemValue="#{q.answersE.get(7).possibleAnswer.subQuestionText}" itemLabel="#{q.answersE.get(5).possibleAnswer.subQuestionText}"/>
+                        </p:selectOneRadio>  
+
+
+                    </h:panelGrid>
+    
+                
+                    <br/>
+                
+                </p:dataList>
+                 </div>
+                    
+            
+
+                
+      
+            
+
+                
+            
+            
+        </p:dataList>
+        </div>
+        <p:separator/>
+        
+        
+             <br/>
+     <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+        
+    </h:body>
+</html>
+

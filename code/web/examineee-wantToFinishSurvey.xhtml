@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Do you want to submit survey?</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+
+    </h:head>
+    <h:body>
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}" ajax="false"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}" ajax="false"/>
+            </p:menubar>                
+        </h:form>
+        
+        <br/>
+        <h:panelGrid styleClass="panelStyle" style="width: 1500px; height: 400px;"> 
+            <h:form>
+                <br/>
+                <p:progressBar widgetVar="pbAjax" ajax="false" value="#{ExamineeControllerStartSurvey.perCentDone}" labelTemplate="{value}% done" styleClass="animated" global="false" style="margin-left: 42%;  width: 150px"></p:progressBar><br/><br/>                   
+                <p:outputLabel value="#{ExamineeControllerStartSurvey.perCentString}" style="margin-left: 46%"/><br/><br/>
+                <p:commandButton value="Alter survey" action="#{ExamineeControllerStartSurvey.alterSurvey()}"  ajax="false" style="margin-left: 42%; width: 150px"/><br/><br/>
+                <p:commandButton value="Save current answers" action="#{ExamineeControllerStartSurvey.saveCurrAnswers()}"  ajax="false" style="margin-left: 42%;  width: 150px"/><br/><br/> 
+                <p:commandButton value="Finish survey" action="#{ExamineeControllerStartSurvey.finish()}"  ajax="false" style="margin-left: 42%;  width: 150px"/><br/><br/> 
+            </h:form>  
+        </h:panelGrid>
+        
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+        
+    </h:body>
+</html>
+

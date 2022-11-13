@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Insert question</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body>
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Back" action="#{InsertQuestsionController.back()}" ajax="false"/>
+            </p:menubar>                
+        </h:form>
+        
+        <br/>
+        
+        
+        <h:form>    
+            <h:panelGrid styleClass="panelStyle" style="width: 1000px; height: 400px;">
+                
+            
+                <p:outputLabel value="Text of the question" style="margin-left: 37%"/>
+                <p:inputTextarea rows="6" cols="33" value="#{InsertQuestsionController.question.questionText}" style="margin-left: 30%"/>          
+               
+                <br/>
+                <h:panelGrid columns="2" cellpadding="5" style="margin-left: 33%">
+                    <p:outputLabel for="type" value="Answer type"/>
+                    <p:selectOneRadio id="type" value="#{InsertQuestsionController.question.type}" layout="grid" columns="1">
+                            <f:selectItem itemLabel="Numeric value" itemValue="1"/>
+                            <f:selectItem itemLabel="Short text" itemValue="2" />
+                            <f:selectItem itemLabel="Long text" itemValue="3" />
+                            <f:selectItem itemLabel="Single choice" itemValue="4" />
+                            <f:selectItem itemLabel="Multiple choice" itemValue="5" />
+                    </p:selectOneRadio>      
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" cellpadding="5" style="margin-left: 23%">
+                    <p:outputLabel value="Number of subquestions"/>
+                    <p:inputText id="ns" value="#{InsertQuestsionController.question.numOfSubquestions}" required="true" requiredMessage="Please enter number of subquestions" style="margin-left: 33%"/>
+                    <p:message for="ns" display="text"/>
+                </h:panelGrid>               
+                 
+               <h:panelGrid columns="2" cellpadding="5" style="margin-left: 23%">
+                    <p:outputLabel value="Insert correct answer if question does not have subquestions "/>
+                    <p:inputText id="ca" value="#{InsertQuestsionController.question.correctAnswer}" style="margin-left: 23%"/>
+                </h:panelGrid>  
+                
+                <h:panelGrid columns="2" cellpadding="5" style="margin-left: 23%">
+                    <p:outputLabel value="Maximu points on the question"/>
+                    <p:inputText placeholder="Name" id="mp" value="#{InsertQuestsionController.question.points}" required="true" requiredMessage="Please enter maximum points on the question" style="margin-left: 33%"/>
+                    <!--<p:message for="mp" display="text"/>-->
+                </h:panelGrid>
+                
+                <br/>
+               
+                
+                
+                <p:commandButton value="Add question" action="#{InsertQuestsionController.addQuestion()}" ajax="false" style="margin-left: 50%"/> 
+      
+            </h:panelGrid>
+        </h:form>
+        
+        <br/>
+     
+        
+    </h:body>
+</html>
+

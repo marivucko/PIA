@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+
+
+    <!-- Load d3.s -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <h:outputStylesheet library="css" name="design.css"/>
+      
+    </h:head>
+    <h:body>
+    
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}" ajax="false"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}" ajax="false"/>
+                <p:menuitem value="Back" action="#{CreatorReviewController.backFromCreatorReviewOneTs()}" ajax="false"/>
+            </p:menubar>                
+        </h:form>
+        
+        <br/>
+      
+            <h:form>
+                <br/>
+                <h:panelGrid styleClass="panelStyle" style="width: 600px; height: 400px;" columns="2" cellpadding="5"> 
+                    <p:outputLabel value="Nobody has completed the test yet." rendered="#{empty CreatorReviewController.completedts}" style="margin-left: 20%"/>
+                    <p:dataTable value="#{CreatorReviewController.completedts}" var="c" rendered="#{not empty CreatorReviewController.completedts}">
+                    <p:column>
+                        <f:facet name="header">
+                            Id
+                        </f:facet>
+                        <p:outputLabel value="#{c.userUsername}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Name
+                        </f:facet>
+                        <p:outputLabel value="#{CreatorReviewController.getName(c.userUsername)}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Surname
+                        </f:facet>
+                        <p:outputLabel value="#{CreatorReviewController.getSurname(c.userUsername)}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            User's points
+                        </f:facet>
+                        <p:outputLabel value="#{c.userPoints}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Max points
+                        </f:facet>
+                        <p:outputLabel value="#{c.maxPoints}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            %
+                        </f:facet>
+                        <p:outputLabel value="#{c.userPoints / c.maxPoints * 100}" rendered="#{c.maxPoints ne 0}">
+                            <f:convertNumber pattern="#0" />
+                        </p:outputLabel> 
+                    </p:column>
+                 </p:dataTable> 
+                  <br/>  
+                   <p:dataTable value="#{CreatorReviewController.arrayint}" var="c" rendered="#{not empty CreatorReviewController.completedts}">
+                    <p:column>
+                        <f:facet name="header">
+                            %
+                        </f:facet>
+                            <p:outputLabel value="#{c*10 + (c==0 ? 0 : 1)}-#{c*10 + 10}"/> 
+                    </p:column> 
+                    <p:column>
+                        <f:facet name="header">
+                            
+                        </f:facet>
+                            <p:outputLabel value="#{CreatorReviewController.testReviewInPerCent.get(c)}"/> 
+                    </p:column>
+                 </p:dataTable> 
+                  <br/>
+                  
+                  
+                </h:panelGrid>
+            </h:form>
+        
+            <div id="my_dataviz"></div>
+       <script>
+                function f(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, b) {
+                // set the dimensions and margins of the graph
+                if (b) {
+                        var width = 450;
+                            height = 450;
+                            margin = 40;
+
+                        // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+                        var radius = Math.min(width, height) / 2 - margin;
+
+                        // append the svg object to the div called 'my_dataviz'
+                        var svg = d3.select("#my_dataviz")
+                          .append("svg")
+                            .attr("width", width)
+                            .attr("height", height)
+                          .append("g")
+                            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+
+
+                         var dynamicData = [
+                            { label: "One", value: 23 },
+                            { label: "Two", value: 33 },
+                            { label: "Three", value: 43 },
+                            { label: "Four", value: 53 }
+                        ]
+
+
+
+
+
+                        // Create dummy data
+                         var data = {  '0-10%': a1, 
+                            '11-20%':a2, 
+                            '21-30%':a3, 
+                            '31-40%':a4, 
+                            '41-50%':a5,
+                            '51-60%':a6, 
+                            '61-70%':a7, 
+                            '71-80%':a8, 
+                            '81-90%':a9,
+                            '90-100%':a10
+                         };
+
+                        // set the color scale
+                        var color = d3.scaleOrdinal()
+                          .domain(data)
+                          .range(d3.schemeSet2);
+
+                        // Compute the position of each group on the pie:
+                        var pie = d3.pie()
+                          .value(function(d) {return d.value; });
+                        var data_ready = pie(d3.entries(data));
+                        // Now I know that group A goes from 0 degrees to x degrees and so on.
+
+                        // shape helper to build arcs:
+                        var arcGenerator = d3.arc()
+                          .innerRadius(0)
+                          .outerRadius(radius);
+
+                        // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+                        svg
+                          .selectAll('mySlices')
+                          .data(data_ready)
+                          .enter()
+                          .append('path')
+                            .attr('d', arcGenerator)
+                            .attr('fill', function(d){ return(color(d.data.key)) })
+                            .attr("stroke", "black")
+                            .style("stroke-width", "2px")
+                            .style("opacity", 0.7);
+
+                        // Now add the annotation. Use the centroid method to get the best coordinates
+                        svg
+                          .selectAll('mySlices')
+                          .data(data_ready)
+                          .enter()
+                          .append('text')
+                          .text(function(d){ return (d.data.value === 0 ? '' : d.data.key) })
+                          .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+                          .style("text-anchor", "middle")
+                          .style("font-size", 17);
+                  
+                  
+                }
+                
+    }
+           f(#{CreatorReviewController.testReviewInPerCent.get(0)},#{CreatorReviewController.testReviewInPerCent.get(1)},#{CreatorReviewController.testReviewInPerCent.get(2)},
+           #{CreatorReviewController.testReviewInPerCent.get(3)},#{CreatorReviewController.testReviewInPerCent.get(4)},#{CreatorReviewController.testReviewInPerCent.get(5)},
+           #{CreatorReviewController.testReviewInPerCent.get(6)},#{CreatorReviewController.testReviewInPerCent.get(7)},#{CreatorReviewController.testReviewInPerCent.get(8)},
+           #{CreatorReviewController.testReviewInPerCent.get(9)}, #{not empty CreatorReviewController.completedts and CreatorReviewController.completedts.get(0).maxPoints ne 0})
+</script> 
+            
+            <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+            
+    </h:body>
+</html>
+

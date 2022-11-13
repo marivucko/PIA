@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    
+       
+    
+    <h:head>
+        <title>Admin</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body onload="#{AdminController.refresh()}">
+        
+        <h:form>  
+            <p:menubar>
+               <p:menuitem value="Logout" action="#{IndexController.logout()}"/>
+               <p:menuitem value="Change password" action="#{LoginController.changePassword()}"/>
+            </p:menubar>                
+        </h:form>
+        
+        <br/>
+        <h:form> 
+          <h:panelGrid styleClass="panelStyle" style="width: 800px; height: 400px;" cellpadding="5">
+            <p:commandButton value="Add user" action="#{AdminController.addUser()}" ajax="false" style="margin-left:  40%"/>  
+            <!--<p:commandButton value="Update user" action="{AdminController.updateUser()}" ajax="false" style="margin-left:  39%"/>-->  
+            <p:commandButton value="Delete user" action="#{AdminController.deleteUser()}" ajax="false" style="margin-left:  39%"/>  
+            <p:commandButton value="Accept requests for registration" action="#{AdminController.acceptRequest()}" ajax="false" style="margin-left:  28%"/>  
+          </h:panelGrid>  
+        </h:form>    
+        
+        <br/><br/>
+        
+        <h:form> 
+          <h:panelGrid styleClass="panelStyle" style="width: 800px; height: 400px;" cellpadding="5">
+              <p:dataTable value="#{AdminController.users}" var="u" rendered="#{not empty AdminController.users}">
+                  <p:column>
+                      <f:facet name="header">
+                          Username
+                      </f:facet>
+                      #{u.username}
+                  </p:column>
+                  
+                  
+                  <p:column>
+                      <f:facet name="header">
+                         Delete 
+                      </f:facet>
+                      <p:commandButton value="Delete" disabled="#{u.userType eq 0}" action="#{AdminController.delete(u)}" ajax="false" style="margin-left: 21%"/>  
+                  </p:column>
+                  
+                  <p:column>
+                      <f:facet name="header">
+                          Update
+                      </f:facet>
+                      <p:commandButton value="Update" action="#{AdminController.update(u)}" ajax="false" style="margin-left: 20%"/>  
+                  </p:column>
+                  
+                  <p:column>
+                      <f:facet name="header">
+                          Accept request
+                      </f:facet>
+                      <p:commandButton value="Accept request" action="#{AdminController.accept(u)}" rendered="#{u.userRegistered == false}" ajax="false"/>  
+                  </p:column>
+              </p:dataTable>
+                  
+          </h:panelGrid>  
+        </h:form>    
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+    </h:body>
+</html>

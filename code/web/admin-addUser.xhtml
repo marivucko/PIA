@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:botDetect="https://captcha.com/java/jsf">
+    
+
+    
+
+    <h:head>
+        <title>Add user</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body>
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Home" action="#{IndexController.home()}"/>
+                <p:menuitem value="Back" action="#{AdminControllerAddUser.back()}"/>
+            </p:menubar> 
+        </h:form>
+        
+        <br/>
+        
+         <h:form enctype="multipart/form-data">    
+            <h:panelGrid styleClass="panelStyle" style="width: 750px; height: 900px;" cellpadding="5">
+                <p:inputText placeholder="Name" id="name" value="#{AdminControllerAddUser.newUser.name}" required="true" requiredMessage="Please enter name." style="margin-left: 33%">
+                <p:message for="name" display="text"/>
+                </p:inputText>
+         
+                <p:inputText type="text" placeholder="Surname" id="surname" value="#{AdminControllerAddUser.newUser.surname}" required="true" requiredMessage="Please enter surname." style="margin-left: 33%">
+                <p:message for="surname" display="text"/>
+                </p:inputText>
+             
+               <p:inputText type="text" placeholder="Username" id="username" value="#{AdminControllerAddUser.newUser.username}" 
+                             required="true" requiredMessage="Please enter username." style="margin-left: 33%">                
+                    <p:message for="username" display="text"/>
+                    <f:validator validatorId="usernameValidator"/>
+                </p:inputText>
+
+             
+                <p:password placeholder="Password" id="password"  value="#{AdminControllerAddUser.newUser.password}"
+                            required="true" requiredMessage="Please enter password." style="margin-left: 33%" 
+                            validatorMessage="Password must contain at least 8 characters, 
+                            at least 1 uppercase, 1 lowercase, 1 number, 1 special character, and must start with a letter.">   
+                    <f:validateRegex pattern="((?=^[a-zA-Z])(?=.*\d)(?=.*[A-Z])(?=.*[\W_]).{8,})"/>   
+                    <p:message for="password"></p:message>
+                </p:password>
+                        
+                <p:password placeholder="Confrim password" id="confirmPassword" value="#{AdminControllerAddUser.confirmPassword}" 
+                            required="true" requiredMessage="Please confirm password." style="margin-left: 33%">  
+                <p:message for="confirmPassword" display="text"/>
+                </p:password>  
+             
+                <p:calendar value="#{AdminControllerAddUser.newUser.birthday}" id="birthday" pattern="yyyy-MM-dd" placeholder="Birthday" required="true" requiredMessage="Please enter birthday." style="margin-left:  33%">  
+                <f:convertDateTime pattern="yyyy-MM-dd"/>  
+                <p:message for="birthday" display="text"/>
+                </p:calendar>
+             
+                <p:inputText type="text" placeholder="Birthplace" id="birthplace" value="#{AdminControllerAddUser.newUser.birthplace}" 
+                             required="true" requiredMessage="Please enter birthplace." style="margin-left: 33%">
+                    <p:message for="birthplace" display="text"/>
+                </p:inputText>
+             
+                <p:inputText type="text" placeholder="JMBG" id="jmbg" value="#{AdminControllerAddUser.newUser.jmbg}" 
+                             required="true" requiredMessage="Please enter jmbg." style="margin-left: 33%">
+                    <p:message for="jmbg" display="text"/>
+                    <f:validator validatorId="jmbgValidator"/>
+                </p:inputText>
+             
+                <p:inputText type="text" placeholder="Phone number" id="phone" value="#{AdminControllerAddUser.newUser.phone}" 
+                             required="true" requiredMessage="Please enter phone number." style="margin-left: 33%">
+                    <p:message for="phone" display="text"/>
+                </p:inputText>
+                
+                <p:inputText type="text" placeholder="email" id="email" value="#{AdminControllerAddUser.newUser.email}" required="true" requiredMessage="Please enter email." validatorMessage="email does not have correct format" style="margin-left: 33%">
+                <p:message for="email" display="text"/>
+                    <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{1,})$"/>
+                </p:inputText>
+
+               
+               <br/>
+                
+                <p:outputLabel value="Insert your profile photo." class="neutral" style="margin-left: 33%"/>
+                    <p:fileUpload value="#{AdminControllerAddUser.file}" mode="simple" skinSimple="true" style="margin-left: 40%"/>          
+                  
+                <h:panelGrid columns="2" cellpadding="5" style="margin-left: 25%">
+                <p:outputLabel for="console" value="User type:" />
+                <p:selectOneRadio id="console" value="#{AdminControllerAddUser.userType}">
+                        <f:selectItem itemLabel="Admin" itemValue="0"/>
+                        <f:selectItem itemLabel="Test creator" itemValue="1" />
+                        <f:selectItem itemLabel="Examinee" itemValue="2" />
+                    </p:selectOneRadio>
+                </h:panelGrid>
+                    
+                <h:panelGrid style="margin-left: 33%">
+                    <h:outputLabel for="captchaCode" value=""/>
+
+                    <botDetect:jsfCaptcha id="loginFormFilter" 
+                              userInputID="captchaCode"
+                              imageWidth="200"
+                              codeLength="4"
+                              binding="#{AdminControllerAddUser.captcha}"/>
+
+                    <div class="validationDiv">
+                      <h:inputText id="captchaCode" value="#{AdminControllerAddUser.captchaCode}"/>
+                    </div>
+                    
+                </h:panelGrid>
+
+
+                
+                <p:commandButton value="Add user" action="#{AdminControllerAddUser.addNewUser()}" ajax="false" style="margin-left: 40%"/> 
+            </h:panelGrid>
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+        </h:form>
+    </h:body>
+</html>

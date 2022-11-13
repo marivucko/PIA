@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Create test/survey</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body onload="#{CreatorController.onLoad()}">
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}"/>
+                <p:menuitem value="Back" action="#{CreatorController.back()}"/>
+
+            </p:menubar>                
+        </h:form>
+        
+         <h:form>    
+            <h:panelGrid styleClass="panelStyle" style="width: 1000px; height: 400px;">
+                <br/>
+                <p:inputText placeholder="Name of the test/survey" id="name" value="#{CreatorController.ts.name}" required="true" requiredMessage="Please enter the name of the test/survey." style="margin-left: 43%">
+                    <p:message for="name" display="text"/>
+                </p:inputText>
+                <br/>
+                <p:inputText placeholder="Basic info" id="basicinfo" value="#{CreatorController.ts.basicInfo}" required="true" requiredMessage="Please enter basic info about the test/survey." style="margin-left: 43%">
+                    <p:message for="basicinfo" display="text"/>
+                </p:inputText>
+                <br/>
+                <h:panelGrid columns="1" cellpadding="5" style="margin-left: 43%">
+                    <p:selectOneRadio id="console" value="#{CreatorController.ts.testSurvey}">
+                            <f:selectItem itemLabel="Test" itemValue="true"/>
+                            <f:selectItem itemLabel="Survey" itemValue="false" />
+                   </p:selectOneRadio>
+                </h:panelGrid>
+                
+                <br/>
+                <br/>
+                <p:outputLabel value="Duration in seconds for test/Number of pages for survey" style="margin-left: 35%"/>
+                
+                <p:inputText id="dpn" value="#{CreatorController.ts.durationPagesNo}" required="true" requiredMessage="Please enter duration in seconds for test/Number of pages for survey" style="margin-left: 43%">
+                    <p:message for="dpn" display="text"/>
+                </p:inputText>
+                <br/>
+                <br/>
+                
+                <p:selectBooleanCheckbox value="#{CreatorController.ts.isPersonalised}" itemLabel="Is the survey presonalized?" style="margin-left: 43%"/>
+                <br/>
+                <p:calendar placeholder="Start of the test/survey" id="ss" value="#{CreatorController.ts.dateTimeStart}" pattern="yyyy-MM-dd HH:mm" style="margin-left: 43%" required="true" requiredMessage="Please enter when the test/survey starts.">
+                    <p:message for="ss" display="text"/>
+                </p:calendar>
+                <br/>
+                <p:calendar placeholder="End of the test/survey" id="es" value="#{CreatorController.ts.dateTimeEnd}" pattern="yyyy-MM-dd HH:mm" style="margin-left: 43%" required="true" requiredMessage="Please enter when the test/survey ends.">
+                    <p:message for="es" display="text"/>
+                </p:calendar>               
+                <br/>
+                <p:commandButton value="Create" action="#{CreatorController.createTS()}" ajax="false" style="margin-left: 49%"/> 
+
+                <br/>
+            </h:panelGrid>
+        </h:form>
+        
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+        
+        
+    </h:body>
+</html>

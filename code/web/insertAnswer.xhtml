@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Insert answers</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body onload="#{InsertAnswerController.onLoad()}">
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Back" action="#{InsertAnswerController.back()}" ajax="false"/>
+            </p:menubar>                
+        </h:form>
+        
+        <br/>
+        
+        
+        <h:form>    
+            <h:panelGrid styleClass="panelStyle" style="width: 1000px; height: 400px;">
+                
+            <h:panelGrid columns="2" cellpadding="5" style="margin-left: 33%"> 
+                <p:outputLabel value="Text of the question" style="margin-left: 37%"/>
+                <p:inputTextarea rows="6" cols="33" value="#{InsertAnswerController.question.questionText}" style="margin-left: 30%"/>
+            </h:panelGrid>
+                
+            <h:panelGrid columns="2" cellpadding="5" style="margin-left: 33%" rendered="#{InsertAnswerController.question.type eq 1  }">
+                <p:dataTable value="#{InsertAnswerController.answers}" var="a" rendered="#{not empty InsertAnswerController.answers}">
+                    <p:column>
+                        <f:facet name="header">
+                            Insert text of subquestion
+                        </f:facet>
+                            <p:inputText id="name" value="#{a.subQuestionText}" required="true" requiredMessage="Please insert text of subquestion." style="margin-left: 33%"  disabled="#{InsertAnswerController.flag eq 1}">
+                                <p:message for="name" display="text"/>
+                            </p:inputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                           Correct answer
+                        </f:facet>
+                        <p:inputText id="answer" required="true" value="#{a.correctAnswer}" requiredMessage="Please insert correct answer." style="margin-left: 33%"  disabled="#{InsertAnswerController.flag eq 1}">
+                           <p:message for="answer" display="text"/>
+                        </p:inputText>
+                    </p:column>
+                 </p:dataTable>
+            </h:panelGrid>
+                
+            <h:panelGrid columns="2" cellpadding="5" style="margin-left: 33%" rendered="#{InsertAnswerController.question.type eq 2  }">
+                <p:dataTable value="#{InsertAnswerController.answers}" var="a" rendered="#{not empty InsertAnswerController.answers}">
+                    <p:column>
+                        <f:facet name="header">
+                            Insert text of subquestion
+                        </f:facet>
+                            <p:inputText id="name1" value="#{a.subQuestionText}" required="true" requiredMessage="Please insert text of subquestion." style="margin-left: 33%"  disabled="#{InsertAnswerController.flag eq 1}">
+                                <p:message for="name1" display="text"/>
+                            </p:inputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                           Correct answer
+                        </f:facet>
+                        <p:inputText id="answer1" required="true" value="#{a.correctAnswer}" requiredMessage="Please insert correct answer." style="margin-left: 33%"  disabled="#{InsertAnswerController.flag eq 1}">
+                           <p:message for="answer1" display="text"/>
+                        </p:inputText>
+                    </p:column>
+                 </p:dataTable>
+            </h:panelGrid>
+               
+                
+            <h:panelGrid columns="2" cellpadding="5" style="margin-left: 33%" rendered="#{InsertAnswerController.question.type eq 4}">
+                <p:dataTable value="#{InsertAnswerController.answers}" var="a" rendered="#{not empty InsertAnswerController.answers}">
+                    <p:column>
+                        <f:facet name="header">
+                            Insert text of subquestion
+                        </f:facet>
+                            <p:inputText id="name" value="#{a.subQuestionText}" required="true" requiredMessage="Please insert text of subquestion." style="margin-left: 33%"  disabled="#{InsertAnswerController.flag eq 1}">
+                                <p:message for="name" display="text"/>
+                            </p:inputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                           Correct?
+                        </f:facet>
+                        <p:selectBooleanCheckbox value="#{a.correctAnswer}"  disabled="#{InsertAnswerController.flag eq 1}"/>
+                    </p:column>
+                 </p:dataTable>
+            </h:panelGrid>
+                
+                <br/>
+                
+            <h:panelGrid columns="2" cellpadding="5" style="margin-left: 33%" rendered="#{InsertAnswerController.question.type eq 5}">                   
+                <p:dataTable value="#{InsertAnswerController.answers}" var="a" rendered="#{not empty InsertAnswerController.answers}">
+                    <p:column>
+                        <f:facet name="header">
+                            Insert text of subquestion
+                        </f:facet>
+                            <p:inputText id="name" value="#{a.subQuestionText}" required="true" requiredMessage="Please insert text of subquestion." style="margin-left: 33%"  disabled="#{InsertAnswerController.flag eq 1}">
+                                <p:message for="name" display="text"/>
+                            </p:inputText>
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">
+                           Correct?
+                        </f:facet>
+                        <p:selectBooleanCheckbox value="#{a.correctAnswer}"  disabled="#{InsertAnswerController.flag eq 1}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+
+            <h:panelGrid columns="2" cellpadding="5" style="margin-left: 33%" rendered="#{InsertAnswerController.question.type eq 3}">
+                <p:outputLabel value="Insert correct answer"/>
+                <p:inputTextarea rows="6" cols="33" value="#{InsertAnswerController.longText}"/>
+            </h:panelGrid>
+                
+
+               
+                
+                
+                <p:commandButton value="Add answer" action="#{InsertAnswerController.insertAnswer()}" ajax="false" style="margin-left: 50%" disabled="#{InsertAnswerController.flag eq 1}"/> 
+      
+            </h:panelGrid>
+        </h:form>
+        
+        <br/>
+     
+        
+    </h:body>
+</html>
+

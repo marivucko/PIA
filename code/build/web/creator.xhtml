@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Creator</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body onload="#{CreatorController.onloadCreator()}">
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}"/>
+                <p:menuitem value="Change password" action="#{LoginController.changePassword()}"/>
+                <p:menuitem value="Insert question" action="#{CreatorController.insetQuestion()}"/>
+                
+            </p:menubar>                
+        </h:form>
+        
+         <h:form>    
+            <h:panelGrid styleClass="panelStyle" style="width: 1000px; height: 400px;">
+              
+                <p:commandButton value="Create a test/survey" action="#{CreatorController.ts()}" ajax="false" style="margin-left: 44%"/> 
+                <p:commandButton value="Review of all surveys and tests" action="#{CreatorController.review()}" ajax="false" style="margin-left: 40%"/> 
+                <p:commandButton value="Do test/survey" action="#{CreatorController.doTestSurvey()}" ajax="false" style="margin-left: 47%"/> 
+
+
+            </h:panelGrid>
+        </h:form>
+        
+        
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+        
+    </h:body>
+</html>

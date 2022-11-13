@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Examination</title>
+        <h:outputStylesheet library="css" name="design.css"/>
+    </h:head>
+    <h:body onload="#{ExamineeController.onload()}">
+        
+        <h:form>  
+            <p:menubar>
+                <p:menuitem value="Login" action="#{IndexController.login()}"/>
+                <p:menuitem value="Register" action="#{IndexController.register()}"/>
+                <p:menuitem value="Change password" action="#{LoginController.changePassword()}"/>
+                <p:menuitem value="Back" action="#{CreatorController.backFromExaminee()}" rendered="#{ExamineeController.user.userType eq 1}"/>
+            </p:menubar>                
+        </h:form>
+        
+        
+        <h:form>   
+            <h:panelGrid styleClass="panelStyle" style="width: 1500px; height: 400px;">
+                
+                <br/><br/>  
+            
+            <h:panelGrid columns="6" style="margin-left: 10%">    
+                <p:commandButton value="Sort by name ASC" action="#{ExamineeController.orderByNameASC()}"  ajax="false" style="margin-left: 33%"/> 
+                <p:commandButton value="Sort by name DESC" action="#{ExamineeController.orderByNameDESC()}"  ajax="false" style="margin-left: 33%"/> 
+
+                <p:commandButton value="Sort by start ASC" action="#{ExamineeController.orderByStartASC()}"  ajax="false" style="margin-left: 33%"/> 
+                <p:commandButton value="Sort by start DESC" action="#{ExamineeController.orderByNameDESC()}"  ajax="false" style="margin-left: 33%"/> 
+                
+                <p:commandButton value="Sort by end ASC" action="#{ExamineeController.orderByEndASC()}"  ajax="false" style="margin-left: 33%"/> 
+                <p:commandButton value="Sort by end DESC" action="#{ExamineeController.orderByEndDESC()}"  ajax="false" style="margin-left: 33%"/> 
+            </h:panelGrid>    
+                
+                <br/><br/>
+                
+                <p:dataTable value="#{ExamineeController.ts}" var="ts" rendered="#{not empty ExamineeController.ts}">
+                    <p:column>
+                        <f:facet name="header">
+                            Id
+                        </f:facet>
+                        <p:outputLabel value="#{ts.id}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Name
+                        </f:facet>
+                        <p:outputLabel value="#{ts.name}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Type
+                        </f:facet>
+                        <p:outputLabel value="Test" rendered="#{ts.testSurvey}"/> 
+                        <p:outputLabel value="Survey" rendered="#{!ts.testSurvey}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Start
+                        </f:facet>
+                        <p:outputLabel value="#{ts.dateTimeStart}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            End
+                        </f:facet>
+                        <p:outputLabel value="#{ts.dateTimeEnd}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Test duration
+                        </f:facet>
+                        <p:outputLabel value="#{ts.durationPagesNo}" rendered="#{ts.testSurvey}"/> 
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            
+                        </f:facet>
+                        <p:commandButton value="Start test" rendered="#{ts.testSurvey and not ExamineeController.completedtsIDs.contains(ts.id)}" action="#{ExamineeController.startTest(ts)}" disabled="#{not ExamineeController.isTsUpToDate(ts) or ExamineeController.madeTest(ts, ExamineeController.user)}"  ajax="false" style="margin-left: 15%; width: 150px"/> 
+                        <p:commandButton value="View results of test" rendered="#{ts.testSurvey and ExamineeController.completedtsIDs.contains(ts.id)}" action="#{ExamineeController.viewTestResults(ts)}"  ajax="false" style="margin-left: 15%; width: 150px"/> 
+                        
+                        <p:commandButton value="Start survey" rendered="#{!ts.testSurvey and not ExamineeController.completedtsIDs.contains(ts.id)}" action="#{ExamineeController.startSurvey(ts)}" disabled="#{not ExamineeController.isTsUpToDate(ts)}" ajax="false" style="margin-left: 15%; width: 150px"/>                  
+                        <p:commandButton value="View results of survey" rendered="#{!ts.testSurvey and ExamineeController.completedtsIDs.contains(ts.id)}" action="#{ExamineeControllerStartSurvey.viewSurveyResults(ts)}"  ajax="false" style="margin-left: 15%; width: 150px"/> 
+                    </p:column>
+                 </p:dataTable>     
+      
+            </h:panelGrid>
+        </h:form>
+        
+        <br/><br/><br/><br/><br/>
+         <div id="footer" align="center" class="footer">
+             <ui:insert name="footer">
+                <br/> 
+                ETF, Belgrade, 2020.<br/>
+                        
+                <br/>
+            </ui:insert>
+        </div> 
+    </h:body>
+</html>
+
